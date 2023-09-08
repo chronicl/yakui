@@ -119,7 +119,7 @@ impl YakuiWinit {
                     WinitMouseButton::Left => MouseButton::One,
                     WinitMouseButton::Right => MouseButton::Two,
                     WinitMouseButton::Middle => MouseButton::Three,
-                    WinitMouseButton::Other(_) => return false,
+                    _ => return false,
                 };
 
                 let down = match button_state {
@@ -148,19 +148,21 @@ impl YakuiWinit {
                 state.handle_event(Event::MouseScroll { delta })
             }
             WinitEvent::WindowEvent {
-                event: WindowEvent::ReceivedCharacter(c),
-                ..
-            } => state.handle_event(Event::TextInput(*c)),
-            WinitEvent::WindowEvent {
                 event: WindowEvent::ModifiersChanged(mods),
                 ..
-            } => state.handle_event(Event::ModifiersChanged(from_winit_modifiers(*mods))),
+            } => state.handle_event(Event::ModifiersChanged(from_winit_modifiers(mods.state()))),
             WinitEvent::WindowEvent {
-                event: WindowEvent::KeyboardInput { input, .. },
+                event: WindowEvent::KeyboardInput { event, .. },
                 ..
             } => {
-                if let Some(key) = input.virtual_keycode.and_then(from_winit_key) {
-                    let pressed = match input.state {
+                if let Some(text) = event.text.as_ref() {
+                    for c in text.chars() {
+                        state.handle_event(Event::TextInput(c));
+                    }
+                }
+
+                if let Some(key) = from_winit_key(event.physical_key) {
+                    let pressed = match event.state {
                         ElementState::Pressed => true,
                         ElementState::Released => false,
                     };

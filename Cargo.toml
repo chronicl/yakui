@@ -2,3 +2,6 @@
 resolver = "2"
 members = ["crates/*"]
 default-members = ["crates/*"]
+
+[workspace.dependencies]
+winit = { git = "https://github.com/rust-windowing/winit.git", rev = "8fdd81e" }

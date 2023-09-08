@@ -207,13 +207,12 @@ impl Graphics {
                 self.resize(*size);
             }
 
-            Event::WindowEvent {
-                event: WindowEvent::ScaleFactorChanged { new_inner_size, .. },
-                ..
-            } => {
-                self.resize(**new_inner_size);
-            }
-
+            // Event::WindowEvent {
+            //     event: WindowEvent::ScaleFactorChanged { new_inner_size, .. },
+            //     ..
+            // } => {
+            //     self.resize(**new_inner_size);
+            // }
             _ => (),
         }
 
